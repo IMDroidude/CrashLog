@@ -1,0 +1,151 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+ext {
+    // This should be same as you've created in bintray
+    bintrayRepo = 'maven'
+
+    // Name which will be visible on bintray
+    bintrayName = 'CrashLog'
+
+    // Library Details
+    publishedGroupId = 'dev.shreyaspatil'
+    libraryName = 'CrashLog'
+    artifact = 'CrashLog'
+    libraryDescription = 'Cool Library'
+    libraryVersion = version
+
+    // Repository Link (For e.g. GitHub repo)
+    siteUrl = 'https://github.com/patilshreyas/AndroidLibDemo'
+    gitUrl = 'https://github.com/patilshreyas/AndroidLibDemo.git'
+    githubRepository= 'patilshreyas/AndroidLibDemo'
+
+    // Developer Details
+    developerId = 'patilshreyas'
+    developerName = 'Shreyas Patil'
+    developerEmail = 'shreyaspatilg@gmail.com'
+
+    // License Details
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+// This is mandatory
+group = publishedGroupId
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                groupId publishedGroupId
+                artifactId = artifact
+                name libraryName
+                description = libraryDescription
+                url siteUrl
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+// Avoid Kotlin docs error
+tasks.withType(Javadoc) {
+    enabled = false
+}
+
+// Remove javadoc related tasks
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// https://github.com/bintray/gradle-bintray-plugin
+bintray {
+    user = System.getenv("bintrayUser")
+    key = System.getenv("bintrayApiKey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+    }
+}
+
+android {
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion rootProject.ext.build_tools_version
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion rootProject.ext.compile_sdk_version
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    api 'com.android.support:recyclerview-v7:' + rootProject.ext.support_version
+    api 'com.android.support:appcompat-v7:' + rootProject.ext.support_version
+    api 'com.android.support:design:' + rootProject.ext.support_version
+    testImplementation 'junit:junit:4.12'
+}
+
+//apply from: 'upload.gradle'

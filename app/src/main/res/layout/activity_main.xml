@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:id="@+id/crashContainers"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/nullPointer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Null Pointer Exception"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/indexOutOfBound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Index Out of Bound Exception"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/classCastExeption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Class Cast Exception"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/arrayStoreException"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Array Store Exception"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/crashLogActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="open crash list" />
+
+    </LinearLayout>
+</RelativeLayout>
